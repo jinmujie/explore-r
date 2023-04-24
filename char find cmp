@@ -1,0 +1,48 @@
+#include<string.h>
+#include<stdio.h>
+#include<stdlib.h>
+
+int Findstr(char *a, char *b)
+{
+	int len1 = strlen(a);
+	int len2 = strlen(b);
+	char *ret = 0;
+	//这个要放到最前面，不然会引起一系列问题。
+	/*1.语法错误 : 缺少“;”(在“类型”的前面)
+	2.“ret”: 未声明的标识符
+	3.“==”:“int”与“void *”的间接级别不同*/
+	if(len1 != len2)
+	{
+		return 0;
+	}
+	strncat(a,a,len1);
+	ret = strstr(a,b);//这里返回的是指针。注意！
+	if(ret == NULL)//这里也出过问题。屁，这样没问题。
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
+int main()
+{
+	char str1[32] = "hello,jinmujie.";//刚刚这里出问题了。
+	/*问题是：Stack around the variable 'str1' was corrupted.
+	原因是：没有明确指示字符串的大小，这时候计算机自动识别并分配存储空间，
+	之后要对字符串进行拼接，就会导致原先开辟的存储空间是不够用的，
+	所以就会破环原变量周围的堆栈区。*/
+	char str2[32] = "jinmujie.hello,";
+	int ret = Findstr(str1, str2);
+	if(ret == 1)
+	{
+		printf("Yes");
+	}
+	else
+	{
+		printf("No");
+	}
+	return 0;
+}
